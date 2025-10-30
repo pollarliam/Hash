@@ -28,16 +28,14 @@ struct HashTable<Key: Hashable, Value> {
     mutating func insert(key: Key, value: Value) {
         let index = hasher(key)
         
-        // Check if bucket already has something
+
         if let existingBucket = buckets[index] {
-            // If key already exists, update its value
             if existingBucket.key == key {
                 buckets[index]?.value = value
             } else {
                 print("Colisão: \(index),  \(key)")
             }
         } else {
-            // Empty slot, insert new bucket
             buckets[index] = bucket(key: key, value: value)
             return print("Adicionado \(key) em índice \(index)")
         }
