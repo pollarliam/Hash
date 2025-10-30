@@ -14,7 +14,7 @@ struct HashTable<Key: Hashable, Value> {
         self.buckets = Array(repeating: nil, count: capacity)
     }
     
-     mutating func hasher(_ key: Key) -> Int {
+    func hasher(_ key: Key) -> Int { //algoritmo pra pegar o hash da chave
         var hashValue = 0
         let stringKey = "\(key)"
         
@@ -28,22 +28,36 @@ struct HashTable<Key: Hashable, Value> {
     mutating func insert(key: Key, value: Value) {
         let index = hasher(key)
         
-
         if let existingBucket = buckets[index] {
             if existingBucket.key == key {
                 buckets[index]?.value = value
-            } else {
+            } else { // tem que ajeitar isso ainda. n tem suporte pra colisão
                 print("Colisão: \(index),  \(key)")
             }
         } else {
             buckets[index] = bucket(key: key, value: value)
-            return print("Adicionado \(key) em índice \(index)")
+            return print("Added \(key) in index \(index)")
         }
+    }
+    
+    func list(getValueIn: Key? = nil) -> String { //só pra ver oq tem na tabela/achar valor
+        if let key = getValueIn {
+            let index = hasher(key)
+            if let value = buckets[index]?.value {
+                return "Value in \(key) is \(value)"
+            } else {
+                return "Bad Key: \(key)"
+            }
+        }
+        return "\(buckets)"
     }
 }
 
-var table = HashTable<String, String>(capacity: 10)
-table.insert(key: "name", value: "Pedro")
+var Dictionary = HashTable<String, String>(capacity: 10)
+Dictionary.insert(key: "name", value: "cim borg")
+Dictionary.insert(key: "animal", value: "dog")
 
-print(table.hasher("name"))
-print(table)
+print(Dictionary.list())
+print(Dictionary.list(getValueIn: "name"))
+print(Dictionary.list(getValueIn: "animal"))
+print(Dictionary.list(getValueIn: "bleh"))
